@@ -29,17 +29,24 @@ const (
 	HighPriority = "high"
 )
 
+type Sound struct {
+	Critical *bool   `json:"critical,omitempty"`
+	Name     *string `json:"name,omitempty"`
+	Volume   *int    `json:"volume,omitempty"`
+}
+
 // PushMessage is an object that describes a push notification request.
 // Fields:
 //	To: an ExponentPushToken
+//	Body: The message to display in the notification.
 //	Data: A dict of extra data to pass inside of the push notification.
 //	      The total notification payload must be at most 4096 bytes.
-//	Title: The title to display in the notification. On iOS, this is
-//	       displayed only on Apple Watch.
-//	Body: The message to display in the notification.
 //	Sound: A sound to play when the recipient receives this
 //	       notification. Specify "default" to play the device's default
 //	       notification sound, or omit this field to play no sound.
+//	Title: The title to display in the notification. On iOS, this is
+//	       displayed only on Apple Watch.
+//	Subtitle: The subtitle to display in the notification below the title.
 //	TTLSeconds: The number of seconds for which the message may be kept around
 //	     for redelivery if it hasn't been delivered yet. Defaults to 0.
 //	Expiration: UNIX timestamp for when this message expires. It has
@@ -51,17 +58,28 @@ const (
 //	       currently only affects iOS. Specify 0 to clear the badge count.
 //	ChannelID: ID of the Notification Channel through which to display this
 //         notification on Android devices.
+//	CategoryID: ID of the Notification Category that this notification is
+//         associated with.
+//	MutableContent: Specifies whether this notification can be intercepted
+//         by the client app in iOS.
+//	ContentAvailable: When this is set to true, the notification will cause
+//         the iOS app to start in the background to run a background task.
+
 type PushMessage struct {
-	To         []ExponentPushToken `json:"to"`
-	Body       string              `json:"body"`
-	Data       map[string]string   `json:"data,omitempty"`
-	Sound      string              `json:"sound,omitempty"`
-	Title      string              `json:"title,omitempty"`
-	TTLSeconds int                 `json:"ttl,omitempty"`
-	Expiration int64               `json:"expiration,omitempty"`
-	Priority   string              `json:"priority,omitempty"`
-	Badge      int                 `json:"badge,omitempty"`
-	ChannelID  string              `json:"channelId,omitempty"`
+	To               []ExponentPushToken `json:"to"`
+	Body             string              `json:"body"`
+	Data             map[string]string   `json:"data,omitempty"`
+	Sound            interface{}         `json:"sound,omitempty"`
+	Title            string              `json:"title,omitempty"`
+	Subtitle         string              `json:"subtitle,omitempty"`
+	TTLSeconds       int                 `json:"ttl,omitempty"`
+	Expiration       int64               `json:"expiration,omitempty"`
+	Priority         string              `json:"priority,omitempty"`
+	Badge            int                 `json:"badge,omitempty"`
+	ChannelID        string              `json:"channelId,omitempty"`
+	CategoryID       string              `json:"categoryId,omitempty"`
+	MutableContent   bool                `json:"mutableContent,omitempty"`
+	ContentAvailable bool                `json:"_contentAvailable,omitempty"`
 }
 
 // Response is the HTTP response returned from an Expo publish HTTP request
